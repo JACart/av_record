@@ -67,6 +67,8 @@ Recording is performed by creating a bag file containing the required image mess
 ```bash
 roslaunch av_record av_record.launch subject:=john_doe recording_path:=/scratch/data/
 ```
+from folder **~/av_record/launch**
+
 ## Generating Videos
 Videos can only be generated after the camera publishers are shut down.  Running the `combine.py` script will play the appropriate bag file and launch processes to capture and convert the images into a single video file.  Type 
 ```
