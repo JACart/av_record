@@ -21,6 +21,13 @@ def select_topic(bag, msg_types, prompt="Select a topic: "):
     topic_num = int(raw_input("Enter topic num (default {}): ".format(default)) or str(default))
     return info_topics[topic_num]
 
+def get_info_topic(bag, image_topic):
+    topic_dict = bag.get_type_and_topic_info()[1]
+    topic_base = "/".join(image_topic.split("/")[:-2])
+    for topic in topic_dict:
+        if topic_dict[topic][0] == 'sensor_msgs/CameraInfo' and topic_base in topic:
+            return topic
+
 def main():
     parser = argparse.ArgumentParser()
 
@@ -41,22 +48,21 @@ def main():
     bag = rosbag.Bag(args.bagfile)
     #image_info_topic = select_topic(bag, set(['sensor_msgs/CameraInfo']), "Select an image info topic:")
     image_topic = select_topic(bag, set(['sensor_msgs/CompressedImage', 'sensor_msgs/Image']), "Select an image topic:")
+    pip_image_topic = select_topic(bag, set(['sensor_msgs/CompressedImage', 'sensor_msgs/Image']), "Select a pip image topic:")
     topic_base = "/".join(image_topic.split("/")[:-2])
     print(topic_base)
     out_name = base_name + "_" + topic_base.replace("/", "_") + '.mp4'
 
-    topic_dict = bag.get_type_and_topic_info()[1]
-    for topic in topic_dict:
-        if topic_dict[topic][0] == 'sensor_msgs/CameraInfo' and topic_base in topic:
-            image_info_topic = topic
-            break
-    
+    image_info_topic = get_info_topic(bag, image_topic)
+    pip_image_info_topic = get_info_topic(bag, pip_image_topic)
     print(image_info_topic)
     
     p0 = subprocess.Popen(['roscore'])
     p1 = subprocess.Popen(['rosrun', 'av_record', 'generate_video.py',
                            '--image_topic', image_topic,
                            '--image_info_topic', image_info_topic,
+                           '--pip_image_topic', pip_image_topic,
+                           '--pip_image_info_topic', pip_image_info_topic,
                            '--name', os.path.join(tmp_dir, 'out.avi')])
     time.sleep(5)
     p2 = subprocess.Popen(['rosbag', 'play', '--rate', '2', args.bagfile])
@@ -66,9 +72,10 @@ def main():
 
     p = subprocess.Popen(['ffmpeg', '-i', os.path.join(tmp_dir, 'out.avi'),
                           '-i', args.audiofile,
-                          '-c:v', 'copy', '-c:a', 'aac',
-                          os.path.join(dir_name,out_name)])
+                          '-c:v', 'libx264', '-crf', '22', '-c:a', 'aac',
+                          os.path.join(dir_name, out_name)])
     p.wait()
+
     shutil.rmtree(tmp_dir)
 
 if __name__ == "__main__":
