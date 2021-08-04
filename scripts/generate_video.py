@@ -56,7 +56,7 @@ class ExtractNode(object):
             rospy.Subscriber(pip_image_topic, CompressedImage,
                              self.pip_compressed_image_callback)
             pip_width = int(self.info_msg.width * pip_size)
-            pip_height = int((pip_width / self.pip_info_msg.width) *
+            pip_height = int((pip_width / float(self.pip_info_msg.width)) *
                              self.pip_info_msg.height)
             self.pip_size = (pip_width, pip_height)
         
