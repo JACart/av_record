@@ -72,10 +72,9 @@ from folder **~/av_record/launch**. Parameters are option. Default subject name 
 Audio and video recording can only be done while the local_admin ROS module is running. It is advised to launch the cart first and then this package.
 
 ## Generating Videos
-Videos can only be generated after the camera publishers are shut down.  Running the `combine.py` script will play the appropriate bag file and launch processes to capture and convert the images into a single video file.  Type 
+Running the `combine.py` script will process the appropriate bag file and audio file to generate a single video file with audio and optional picture-in-picture.. Type 
 ```
 python combine.py --help 
 ```
 for usage information.
 
-Combining files cannot be performed while local-admin and ROS are running as the method requires playback within ROS.
