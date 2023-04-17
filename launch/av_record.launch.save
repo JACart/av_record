@@ -24,9 +24,9 @@
  <node pkg="av_record" type="record_audio.py" name="record_audio" output="screen"
        if="$(arg record_audio)">
    
-   <param name="rate" value="44100" type="int"/>
+   <param name="rate" value="48000" type="int"/>
    <param name="channels" value="2" type="int"/>
-   <param name="device" value="hw:2,0"/>
+   <param name="device" value="pcm.mixin"/>
    <param name="format" value="S16_LE"/>
    <param name="image_info_topic" value="$(arg inside_camera_info_topic)"/>
    <param name="prefix" value="$(arg recording_path)$(arg subject)"/>

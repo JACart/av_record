@@ -11,7 +11,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import numpy as np
 from datetime import datetime
 
-FRAME_RATE = 30.0
+FRAME_RATE = 15.0
 FRAME_TIME = 1.0 / FRAME_RATE
 
 
@@ -79,7 +79,7 @@ def main():
     img_storage = []
     pip_img_storage = []
     cur_time = None
-    for topic, msg, t in bag.read_messages(topics=['/zed/zed_node/right/image_rect_color/compressed', '/usb_cam/image_raw/compressed']):
+    for topic, msg, t in bag.read_messages(topics=[image_topic, pip_image_topic]):
         _cv_bridge = CvBridge()
         cur_time = msg.header.stamp.to_sec()
 
