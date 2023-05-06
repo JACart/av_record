@@ -79,3 +79,14 @@ python combine.py --help
 for usage information.
 
 Combining files cannot be performed while local-admin and ROS are running as the method requires playback within ROS.
+
+## Automatically Generating and Combining Videos:
+
+In this directory is a 'genvideo.py' script that automatically takes in the bag/info files to create the mp4 in one step. The command on small laptop is: 
+```
+genvideo <name-of-video> <absolute-path-to-recording>
+```
+
+If small laptop is not in use, the script can be added as an alias in .bashrc.
+
+It saves the mp4 in `<absolute-path-to-recording>/saved_recordings`, and the bag/info files in `<absolute-path-to-recording>/saved_recordings/temp`. This will save headache finding the bag files and combining them.
